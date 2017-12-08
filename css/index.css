@@ -9,7 +9,7 @@
 html {
   height: 100%;
   font-size: 20px;
-  font-family: 'Monaco', 'Courier New';
+  font-family: 'Monaco', 'Courier New', consolas, Menlo;
   background-color: #f9f9f9;
   line-height: 2;
 }
@@ -48,7 +48,7 @@ a {
   padding: 5px 8px;
   text-decoration: none;
   font-size: 12px;
-  font-family: 'Monaco', 'Courier New';
+  font-family: 'Monaco', 'Courier New', consolas, Menlo;
   color: #fff;
   background-color: #4d4d4d;
   transition: all 0.2s ease-in-out;
@@ -174,7 +174,7 @@ a {
   font-weight: bold;
 }
 #terminal-pl {
-  font-family: 'Monaco', 'Courier New';
+  font-family: 'Monaco', 'Courier New', consolas, Menlo;
 }
 #top-bar {
   position: relative;
