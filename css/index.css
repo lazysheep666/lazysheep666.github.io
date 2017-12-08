@@ -231,7 +231,7 @@ a {
 @media screen and (max-width: 768px) {
   #header-nav #toggle-nav {
     display: block;
-    padding-top: 0.6rem;
+    padding: 0.6rem;
     cursor: pointer;
   }
   #header-nav .in {
