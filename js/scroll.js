@@ -28,7 +28,6 @@ const HEADER_INNER = document.getElementById('header-inner');
 let navHeight = HEADER_NAV.clientHeight;
 window.onscroll = function() {
   let currentTop = document.documentElement.scrollTop ||document.body.scrollTop;
-  ('header-nav');
   if (isScrollDown(currentTop) && isOverHeaderNav(currentTop)) {
     HEADER_INNER.style.paddingTop = navHeight + 'px';
     HEADER_NAV.classList.add('fixed');
