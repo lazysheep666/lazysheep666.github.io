@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>来聊一聊BFC | lazySheep blog</title><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"><script src="/js/third-party/jquery.min.js">           </script><script src="/js/third-party/velocity.min.js">           </script><script src="/js/third-party/velocity.ui.min.js">           </script><link rel="icon" href="/img/favicon.ico"></head><body><nav id="nav-bar"><nav class="clear-fix" id="nav-container"><div class="pull-left" id="page-home"><a href="/">lazySheep blog</a></div><i class="fa fa-bars pull-right" id="toggle-nav" aria-hidden="true"></i><ul class="pull-right" id="navs"><li><a class="nav" href="/">Home</a></li><li><a class="nav" href="/about">About</a></li><li><a class="nav" href="/tags">Tags</a></li></ul></nav></nav><header id="header-info"><div id="header-container"><div id="site-info"><div id="terminal-pl"><div id="top-bar"><ul id="control"><li class="btn"></li><li class="btn"></li><li class="btn"></li></ul><div id="file-path"><i class="fa fa-folder folder-ic" aria-hidden="true"></i> lazysheep 10 X 10</div></div><div id="code-pl">Last updated: 2017-05-07<br>lazysheep:~ Desktop$ <span class="code-pl-input">node 来聊一聊BFC.js</span><br><br>> Post.tags <br><a class="tag" href="#BFC"><span>BFC</span></a><a class="tag" href="#CSS布局"><span>CSS布局</span></a><br><br>> Post.prev <br><a href="/2017/05/09/node菜鸟笔记-1-Mongodb-express实现简单登陆注册/"><span class="answer">node菜鸟笔记(1)---Mongodb+express实现简单登陆注册</span></a><br><br>> Post.next <br><a href="/2017/05/04/hello/"><span class="answer">Hello</span></a></div></div></div></div></header><div id="content-outer"><div id="content-inner"><article id="post"><a class="article-title">来聊一聊BFC</a><time class="article-date"><i class="fa fa-calendar" aria-hidden="true"></i> 2017-05-07</time><p>前几天看了看张鑫旭大大的一篇关于浮动的视频,其中提到了BFC(当时并未在意),后面自己遇到了一个<strong>collapsed margin的问题</strong>于是就去看看了BFC,下面就来记录记录BFC以及其的一些应用~<br><a id="more"></a></p>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>给子元素设置了margin-top margin-bottom后 父元素也会相应的<strong>类似于添加了margin-top跟margin-bottom</strong>但是<strong>根元素并不受影响</strong>:<br><img src="/img/BFC/father.png" alt="father"><br><img src="/img/BFC/html.png" alt="html"></p>
+<h2 id="外边距折叠-collapsed-margin"><a href="#外边距折叠-collapsed-margin" class="headerlink" title="外边距折叠(collapsed margin)"></a>外边距折叠(collapsed margin)</h2><p><strong>两个或多个相邻</strong>（父子元素或兄弟元素）的块级框<strong>垂直</strong>方向上的 margin 会发生折叠。这种方式形成的外边距即可称为外边距折叠(collapsed margin)。<br>其中折叠的计算方法为，如果两者的外边距都为正值，则折叠后的外边距值为两者的较大值；如果其中有一个是负值，则折叠后的外边距值为正值减去负值的绝对值得到的值；如果两者都是负值，则折叠后的外边距值为用0减去两者的绝对值中较大的那一个。</p>
+<blockquote>
+<p>这就是为什么会出现以上父元素的外边距会被子元素的外边距影响的原因啦至于为什么根元素为什么没被影响，请继续看下面</p>
+</blockquote>
+<h2 id="BFC-Block-Formatting-Context"><a href="#BFC-Block-Formatting-Context" class="headerlink" title="BFC(Block Formatting Context)"></a>BFC(Block Formatting Context)</h2><p>BFC是Block Formatting Context的缩写，译为<strong>块级格式上下文</strong></p>
+<ul>
+<li>创建了BFC的元素规定了内部的块级框如何布局，并且使该框在页面上形成一个隔离的独立容器，容器里面的子元素不会影响到外面的元素</li>
+<li>在BFC中，框会从包含块的顶部开始，一个接一个地，垂直向下地摆放</li>
+<li>两个兄弟框之间的垂直距离由margin属性来决定。在<strong>同一个BFC</strong>中，相邻的块级框之间的垂直外边距会出现折叠(常见的外边距折叠，其实并不是bug，而是由于BFC的约束)</li>
+<li>在BFC中，每个框的左外边距边要紧贴其包含块的左边(对于从左往右的格式化)，否则相反。即使在有浮动的情景下也是如此，除非框创建了一个新的BFC(在这种情况下该框可能会为了避开浮动框而变窄)</li>
+<li>BFC的区域不会与<strong>float box</strong>重叠</li>
+<li>计算BFC的高度时，浮动元素也参与计算(<strong>overflow:hidden 可以清除浮动</strong>)</li>
+<li>下列情况将创建一个BFC:<ul>
+<li>根元素(<strong>由于html标签是根元素是一个BFC所以就不会被子元素影响啦</strong>)</li>
+<li>浮动 (元素的 float 不为 none)</li>
+<li>绝对定位元素 (元素的 position 为 absolute 或 fixed)</li>
+<li>行内块 inline-blocks (元素的 display: inline-block)</li>
+<li>表格单元格 (元素的 display: table-cell，HTML表格单元格默认属性)</li>
+<li>表格标题 (元素的 display: table-caption, HTML表格标题默认属性)</li>
+<li>overflow 的值不为 visible的元素</li>
+<li>弹性盒子 flex boxes (元素的 display: flex 或 inline-flex)</li>
+</ul>
+</li>
+</ul>
+<h2 id="BFC-应用"><a href="#BFC-应用" class="headerlink" title="BFC 应用"></a>BFC 应用</h2><blockquote>
+<p>最常见的就是防止外边距折叠啦~</p>
+</blockquote>
+<h4 id="1-防止外边距折叠"><a href="#1-防止外边距折叠" class="headerlink" title="1. 防止外边距折叠"></a>1. 防止外边距折叠</h4><p><img src="/img/BFC/demo1.png" alt="demo1"></p>
+<p><img src="/img/BFC/demo2.png" alt="demo2"></p>
+<p><img src="/img/BFC/demo3.png" alt="demo3"></p>
+<p><strong>Oh！折叠了 QAQ</strong></p>
+<blockquote>
+<p>两个兄弟框之间的垂直距离由margin属性来决定。在<strong>同一个BFC中</strong>，相邻的块级框之间的垂直外边距会出现折叠。</p>
+</blockquote>
+<p>那么我们只需让他们不在同一个BFC中就可以防止折叠了。比如说给第一个p或第2个p加float、给第一个p或第2个p外面包裹一层容器，并触发该容器生成一个BFC。</p>
+<h4 id="2-清除浮动"><a href="#2-清除浮动" class="headerlink" title="2. 清除浮动"></a>2. 清除浮动</h4><p>正如前面所说只需要给父级元素添加一个<strong>overflow: hidden</strong> 就好啦~ 因为<strong>计算BFC的高度时，浮动元素也参与计算</strong><br><img src="/img/BFC/demo4.png" alt="demo4"></p>
+<p><img src="/img/BFC/demo5.png" alt="demo5"></p>
+<h4 id="3-自适应三列布局"><a href="#3-自适应三列布局" class="headerlink" title="3. 自适应三列布局"></a>3. 自适应三列布局</h4><p><img src="/img/BFC/demo6.png" alt="demo6"></p>
+<p><img src="/img/BFC/demo7.png" alt="demo7"></p>
+<p><img src="/img/BFC/demo8.png" alt="demo8"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://cccshine.github.io/2016/08/04/%E7%90%86%E8%A7%A3CSS%E4%B8%AD%E7%9A%84BFC/" target="_blank" rel="noopener">理解CSS中的BFC</a></p>
+</article><nav id="pagination"><div class="pagination clear-fix"><div class="page-prev pull-left"><a href="/2017/05/09/node菜鸟笔记-1-Mongodb-express实现简单登陆注册/"><i class="fa fa-chevron-left"> </i><span>node菜鸟笔记(1)---Mongodb+express实现简单登陆注册</span></a></div><div class="page-next pull-right"><a href="/2017/05/04/hello/"><span>Hello</span><i class="fa fa-chevron-right"></i></a></div></div></nav></div></div><footer><div id="footer-inner"><div class="social-icons"><a class="social-icon" href="https://github.com/lazysheep666" target="_blank"><i class="fa fa-github"></i></a><a class="social-icon" href="https://weibo.com/u/5318061001" target="_blank"><i class="fa fa-weibo"></i></a></div><p class="copyright">Copyright © lazysheep Blog undefined</p></div></footer><script src="/js/nav.js"></script><script src="/js/scroll.js"></script><script src="/js/index.js"></script></body></html>

@@ -503,15 +503,6 @@ pre .comment {
   max-width: 100%;
   border: 1px solid #eaeefb;
 }
-.recent-post-item strong,
-#post strong {
-  display: inline-block;
-  background-color: #eafdf0;
-}
-.recent-post-item strong:hover,
-#post strong:hover {
-  background-color: #7dffb3;
-}
 .recent-post-item .article-title,
 #post .article-title {
   display: block;
