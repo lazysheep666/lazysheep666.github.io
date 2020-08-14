@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>理解MVC、MVP、MVVM模式 | lazySheep blog</title><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"><script src="/js/third-party/jquery.min.js">           </script><script src="/js/third-party/velocity.min.js">           </script><script src="/js/third-party/velocity.ui.min.js">           </script><link rel="icon" href="/img/favicon.ico"></head><body><nav id="nav-bar"><nav class="clear-fix" id="nav-container"><div class="pull-left" id="page-home"><a href="/">lazySheep blog</a></div><i class="fa fa-bars pull-right" id="toggle-nav" aria-hidden="true"></i><ul class="pull-right" id="navs"><li><a class="nav" href="/">Home</a></li><li><a class="nav" href="/about">About</a></li><li><a class="nav" href="/tags">Tags</a></li></ul></nav></nav><header id="header-info"><div id="header-container"><div id="site-info"><div id="terminal-pl"><div id="top-bar"><ul id="control"><li class="btn"></li><li class="btn"></li><li class="btn"></li></ul><div id="file-path"><i class="fa fa-folder folder-ic" aria-hidden="true"></i> lazysheep 10 X 10</div></div><div id="code-pl">Last updated: 2018-01-09<br>lazysheep:~ Desktop$ <span class="code-pl-input">node 理解MVC、MVP、MVVM模式.js</span><br><br>> Post.tags <br><a class="tag" href="#设计模式"><span>设计模式</span></a><br><br>> Post.next <br><a href="/2017/12/04/Memeory-Management-In-JS/"><span class="answer">Memeory Management In JS</span></a></div></div></div></div></header><div id="content-outer"><div id="content-inner"><article id="post"><a class="article-title">理解MVC、MVP、MVVM模式</a><time class="article-date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-01-09</time><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天review MVC、MVP、MVVM模式时翻到了收藏的一篇文章，于是就准备总结一下~<br><a href="http://www.linuxidc.com/Linux/2015-10/124622.htm" target="_blank" rel="noopener">原文链接</a><br><a id="more"></a></p>
+<h2 id="三种模式的目的"><a href="#三种模式的目的" class="headerlink" title="三种模式的目的"></a>三种模式的目的</h2><ul>
+<li>基于职责分离（Speration of Duties）对应用程序进行分层以求更好的管理程序。</li>
+<li>展示信息跟数据的可视化界面被称作<code>View</code>.</li>
+<li>保存数据和提供操作数据的接口被称作<code>Model</code>.</li>
+</ul>
+<h2 id="暴露的问题"><a href="#暴露的问题" class="headerlink" title="暴露的问题"></a>暴露的问题</h2><p>有了view跟model的分层同时也出现了一些问题</p>
+<ul>
+<li>相应用户操作的业务逻辑管理（比如说排序）</li>
+<li>View如何响应Model数据的变更</li>
+</ul>
+<p><code>MV*模式之间的差异主要就是对以上两个问题的处理方式的不同造成的</code></p>
+<h2 id="Smalltalk-80-MVC"><a href="#Smalltalk-80-MVC" class="headerlink" title="Smalltalk-80 MVC"></a>Smalltalk-80 MVC</h2><p>在MVC模式中多了<code>Controller</code>这一层，其主要是为了管理应用程序的业务逻辑。</p>
+<h3 id="三者的调用关系"><a href="#三者的调用关系" class="headerlink" title="三者的调用关系"></a>三者的调用关系</h3><p><img src="/imgs/理解MVCMVPMVVM模式/1.png" alt=""></p>
+<ol>
+<li>用户对View进行操作（如输入跟点击），View捕捉到这个操作后将控制权交给Controller。</li>
+<li>Controller执行相关的业务逻辑，这些业务逻辑可能会根据Model提供的接口进行相应的读写操作。</li>
+<li>当Model的数据变更后会根据<code>观察者模式</code>(运用同一个Model的不同View会同时得到通知，从而同时刷新)通知View。</li>
+<li>View通过观察者模式收到Model变更的消息以后，会向Model请求最新的数据，然后重新更新界面。</li>
+</ol>
+<h3 id="这里有几个需要特别关注的要点"><a href="#这里有几个需要特别关注的要点" class="headerlink" title="这里有几个需要特别关注的要点"></a>这里有几个需要特别关注的要点</h3><ul>
+<li>View是把控制权交移给Controller，自己不执行业务逻辑。</li>
+<li>Controller执行业务逻辑并且操作Model，但不会直接操作View，可以说它是对View无知的。</li>
+<li>View和Model的同步消息是通过<code>观察者模式</code>进行，而同步操作是由View自己请求Model的数据然后对视图进行更新。</li>
+</ul>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>将业务逻辑全部分离到了Controller中，更易于管理跟日后的更新（当业务逻辑变更时只需要更换Controller，不需要更改View跟Model）。</li>
+<li>观察者模式可以做到多视图同时刷新。</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>Controller测试困难。</li>
+<li>View无法组件化。（依赖特定的Model）</li>
+</ul>
+<h2 id="MVC-Model-2"><a href="#MVC-Model-2" class="headerlink" title="MVC Model 2"></a>MVC Model 2</h2><p>这种MVC模式是在<code>服务器端</code>所运用的。</p>
+<h3 id="三者的调用关系-1"><a href="#三者的调用关系-1" class="headerlink" title="三者的调用关系"></a>三者的调用关系</h3><p><img src="/imgs/理解MVCMVPMVVM模式/2.png" alt=""></p>
+<ol>
+<li>服务端接收到来自客户端的请求。</li>
+<li>服务端通过路由规则把这个请求交由给特定的Controller进行处理。</li>
+<li>Controller执行相应的业务逻辑，对数据库数据（Model）进行操作。</li>
+<li>Controller用数据渲染特定的模板，返回给客户端。</li>
+</ol>
+<p>因为HTTP协议是单工且无状态的，除非客户端再次发起请求，否则服务器端的Model的变更就无法告知客户端。所以这不能严格的被称为MVC模式。</p>
+<h2 id="MVP模式"><a href="#MVP模式" class="headerlink" title="MVP模式"></a>MVP模式</h2><p>MVP模式是MVC模式的改良（用Presenter替换了Controller）。在上个世纪90年代，IBM旗下的子公司Taligent在用C/C++开发一个叫CommonPoint的图形界面应用系统的时候提出来的。</p>
+<h3 id="三者调用关系"><a href="#三者调用关系" class="headerlink" title="三者调用关系"></a>三者调用关系</h3><p><img src="/imgs/理解MVCMVPMVVM模式/3.png" alt=""></p>
+<ol>
+<li>与<code>MVC</code>模式一样，用户先对View进行操作，View将控制递交给了<code>Presenter</code>。</li>
+<li>Presenter拿到控制权后执行相应的业务逻辑对Model进行操作。</li>
+<li>Model数据变更后通过<code>观察者模式</code>把变更消息传递给<code>Presenter</code>而不是<code>View</code>。</li>
+<li>Presenter获取到Model变更的消息以后，通过View提供的接口更新界面</li>
+</ol>
+<h3 id="关键点"><a href="#关键点" class="headerlink" title="关键点"></a>关键点</h3><ul>
+<li>View不再负责同步的逻辑，而是由Presenter负责。Presenter中既有业务逻辑也有同步逻辑</li>
+<li>View需要提供操作界面的接口给Presenter进行调用</li>
+</ul>
+<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>业务逻辑便于测试</li>
+<li>View可以组件化。（View不依赖Model）</li>
+</ul>
+<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>Presenter除了要处理业务逻辑外还要处理View的同步逻辑，过于笨重。</li>
+</ul>
+<h3 id="MVVM模式"><a href="#MVVM模式" class="headerlink" title="MVVM模式"></a>MVVM模式</h3><p>MVVM模式是对MVP模式的一种改良，将MVP中的Presenter替换成了ViewModel。</p>
+<h3 id="三者调用关系-1"><a href="#三者调用关系-1" class="headerlink" title="三者调用关系"></a>三者调用关系</h3><p><img src="/imgs/理解MVCMVPMVVM模式/4.png" alt=""></p>
+<h3 id="关键点-1"><a href="#关键点-1" class="headerlink" title="关键点"></a>关键点</h3><p><code>View与Model通过ViewModel中的Binder实现双向绑定</code></p>
+<ul>
+<li>只需要在View的模版语法当中，指令式地声明View上的显示的内容是和Model的哪一块数据绑定的。</li>
+<li>当ViewModel对进行Model更新的时候，Binder会自动把数据更新到View上去。</li>
+<li>当用户对View进行操作（例如表单输入），Binder也会自动把数据更新到Model上去。</li>
+<li>框架的Binder自动执行了之前Presenter对View跟Model的同步逻辑</li>
+</ul>
+<h3 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>解决了MVP需要处理大量的同步逻辑的问题。</li>
+<li>简化测试</li>
+</ul>
+<h3 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>对于大型的图形应用程序，视图状态较多，ViewModel的构建和维护的成本都会比较高</li>
+</ul>
+</article><nav id="pagination"><div class="pagination clear-fix"><div class="page-next pull-right"><a href="/2017/12/04/Memeory-Management-In-JS/"><span>Memeory Management In JS</span><i class="fa fa-chevron-right"></i></a></div></div></nav></div></div><footer><div id="footer-inner"><div class="social-icons"></div><p class="design-info">power by <a href="https://hexo.io" target="_blank">Hexo</a> | theme <a href="https://github.com/lazysheep666/terminal_theme" target="_blank">Teminal</a></p><p class="copyright">Copyright © lazysheep Blog 2020</p></div></footer><script src="/js/nav.js"></script><script src="/js/scroll.js"></script><script src="/js/index.js"></script></body></html>
